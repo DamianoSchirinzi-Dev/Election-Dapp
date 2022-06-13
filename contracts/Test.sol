@@ -11,16 +11,16 @@ contract Test {
     mapping (uint => Payee) payees;
     mapping (address => uint) recievers;
 
-    function payAddress(address payable _payee) public payable {
-        require(msg.value > 0);
-        _payee.transfer(msg.value);
+    modifier checkFunds(uint _amount) { 
+        require(msg.sender.balance > _amount);
+        _;
+    }
+
+    function payAddress(address payable _payee, uint _amount) public payable checkFunds(_amount){
+        _payee.transfer(_amount);
     }
 
     function getPayee(uint _key) public view returns(uint){
         return payees[_key].amountPayed;
-    }
-
-    function getReciever(address reciever) public view returns(uint) {
-
     }
 }
